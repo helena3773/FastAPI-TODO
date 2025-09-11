@@ -4,59 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .todo-text {
+            margin-left: 8px;
+        }
+        .button-group button {
+            margin-left: 4px;
+        }
+        .completed {
+            color: green;
+            font-weight: bold;
+        }
+        .pending {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h1>To-Do List</h1>
-    <ul id="todo-list"></ul>
-    <form id="todo-form">
-        <input type="text" id="title" placeholder="Title" required>
-        <input type="text" id="description" placeholder="Description" required>
-        <button type="submit">Add To-Do</button>
-    </form>
+    <div class="container">
+        <h1>TO-DO List</h1>
+        <ul id="todo-list" class="todo-list"></ul>
+        <form id="todo-form" class="todo-form">
+            <input type="text" id="title" placeholder="TO-DO" required>
+            <input type="text" id="description" placeholder="Description" required>
+            <button type="submit">Add To-Do</button>
+        </form>
+    </div>
     <script>
         async function fetchTodos() {
             const response = await fetch('/todos');
             const todos = await response.json();
             const todoList = document.getElementById('todo-list');
             todoList.innerHTML = '';
+
             todos.forEach(todo => {
                 const li = document.createElement('li');
-                li.textContent = `${todo.title}: ${todo.description} (Completed: ${todo.completed})`;
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit';
-                editButton.onclick = () => editTodo(todo.id);
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.onclick = () => deleteTodo(todo.id);
-                li.appendChild(editButton);
-                li.appendChild(deleteButton);
+                li.className = 'todo-item';
+
+                li.innerHTML = `
+                    <div>
+                        <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
+                        <span class="todo-text">${todo.title} - ${todo.description}</span>
+                        <span class="status ${todo.completed ? 'completed' : ''}">
+                            ${todo.completed ? 'Completed!' : ''}
+                        </span>
+                    </div>
+                    <div class="button-group">
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </div>
+                `;
+
+                const checkbox = li.querySelector('.todo-checkbox');
+                checkbox.addEventListener('change', async () => {
+                    const response = await fetch(`/todos/${todo.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: todo.id,
+                            title: todo.title,
+                            description: todo.description,
+                            completed: checkbox.checked
+                        })
+                    });
+                    if (response.ok) fetchTodos();
+                });
+
+                const editButton = li.querySelector('.edit-btn');
+                editButton.addEventListener('click', () => editTodo(todo.id));
+
+                const deleteButton = li.querySelector('.delete-btn');
+                deleteButton.addEventListener('click', () => deleteTodo(todo.id));
+
                 todoList.appendChild(li);
             });
         }
 
         async function editTodo(id) {
-            const title = prompt('Enter new title:');
+            const title = prompt('Enter new TO-DO:');
             const description = prompt('Enter new description:');
             const completed = confirm('Is this task completed?');
             const response = await fetch(`/todos/${id}`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id, title, description, completed })
             });
-            if (response.ok) {
-                fetchTodos();
-            }
+            if (response.ok) fetchTodos();
         }
 
         async function deleteTodo(id) {
-            const response = await fetch(`/todos/${id}`, {
-                method: 'DELETE'
-            });
-            if (response.ok) {
-                fetchTodos();
-            }
+            const response = await fetch(`/todos/${id}`, { method: 'DELETE' });
+            if (response.ok) fetchTodos();
         }
 
         document.getElementById('todo-form').addEventListener('submit', async (event) => {
@@ -65,12 +111,11 @@
             const description = document.getElementById('description').value;
             const response = await fetch('/todos', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: Date.now(), title, description, completed: false })
             });
             if (response.ok) {
+                document.getElementById('todo-form').reset();
                 fetchTodos();
             }
         });
