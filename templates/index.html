@@ -30,7 +30,9 @@
                 li.innerHTML = `
                     <div>
                         <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
-                        <span class="todo-text">${todo.title} - ${todo.description}</span>
+                        <span class="todo-text">
+                            <strong>${todo.title}</strong> - ${todo.description}
+                        </span>
                         <span class="status ${todo.completed ? 'completed' : ''}">
                             ${todo.completed ? 'Completed!' : ''}
                         </span>
