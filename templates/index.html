@@ -1,27 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>TO-DO LIST</title>
+    <link rel="stylesheet" href="/static/style.css?v=2">
 </head>
 <body>
     <div class="container">
-        <h1>TO-DO List</h1>
-        <ul id="todo-list" class="todo-list"></ul>
-        <form id="todo-form" class="todo-form">
-            <input type="text" id="title" placeholder="TO-DO" required>
-            <input type="text" id="description" placeholder="Description" required>
-            <button type="submit">Add To-Do</button>
-        </form>
+        <!-- <h1>TO-DO LIST</h1> -->
+        
+        <!-- 달력 섹션 -->
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <button id="prev-month" class="nav-btn">‹</button>
+                <h2 id="current-month"></h2>
+                <button id="next-month" class="nav-btn">›</button>
+            </div>
+            <div id="calendar" class="calendar">
+                <div class="calendar-days"></div>
+                <div class="calendar-dates"></div>
+            </div>
+        </div>
+
+        <!-- 선택된 날짜의 투두 섹션 -->
+        <div class="todo-section">
+            <h3 id="selected-date-title">날짜를 선택하세요</h3>
+            <ul id="todo-list" class="todo-list"></ul>
+            <form id="todo-form" class="todo-form" style="display: none;">
+                <input type="text" id="title" placeholder="투두 제목" required>
+                <input type="text" id="description" placeholder="설명" required>
+                <button type="submit">투두 추가</button>
+            </form>
+        </div>
     </div>
     <script>
-        async function fetchTodos() {
-            const response = await fetch('/todos');
-            const todos = await response.json();
+        let currentDate = new Date();
+        let selectedDate = null;
+        let allTodos = [];
+
+        // 달력 초기화
+        function initCalendar() {
+            updateCalendarHeader();
+            renderCalendar();
+            loadAllTodos();
+        }
+
+        // 달력 헤더 업데이트
+        function updateCalendarHeader() {
+            const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', 
+                              '7월', '8월', '9월', '10월', '11월', '12월'];
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('current-month').textContent = `${year}년 ${monthNames[month]}`;
+        }
+
+    function renderCalendar() {
+        const calendarDays = document.querySelector('.calendar-days');
+        const calendarDates = document.querySelector('.calendar-dates');
+        calendarDays.innerHTML = '';
+        calendarDates.innerHTML = '';
+
+        // 요일 헤더
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+        dayNames.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'day-header';
+            dayHeader.textContent = day;
+            calendarDays.appendChild(dayHeader);
+        });
+
+        // 날짜 셀 42개
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const startDate = new Date(firstDay);
+        startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+        for (let i = 0; i < 42; i++) {
+            const cellDate = new Date(startDate);
+            cellDate.setDate(startDate.getDate() + i);
+
+            const cell = document.createElement('div');
+            cell.className = 'calendar-cell';
+            cell.textContent = cellDate.getDate();
+
+            // 이번 달/다른 달 구분
+            if (cellDate.getMonth() === month) {
+                cell.classList.add('current-month');
+            } else {
+                cell.classList.add('other-month');
+            }
+
+            // 오늘
+            if (cellDate.toDateString() === new Date().toDateString()) {
+                cell.classList.add('today');
+            }
+
+            // 선택 날짜
+            if (selectedDate && cellDate.toDateString() === selectedDate.toDateString()) {
+                cell.classList.add('selected');
+            }
+
+            // 투두 여부
+            const dateStr = formatDate(cellDate);
+            if (allTodos.some(todo => todo.date === dateStr)) {
+                cell.classList.add('has-todos');
+            }
+
+            cell.addEventListener('click', () => selectDate(cellDate));
+            calendarDates.appendChild(cell);
+        }
+    }
+
+
+        // 날짜 선택
+        function selectDate(date) {
+            selectedDate = date;
+            const dateStr = formatDate(date);
+            document.getElementById('selected-date-title').textContent = 
+                `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+            document.getElementById('todo-form').style.display = 'block';
+            fetchTodosByDate(dateStr);
+            renderCalendar(); // 선택된 날짜 하이라이트 업데이트
+        }
+
+        // 날짜 포맷팅 (YYYY-MM-DD)
+        function formatDate(date) {
+            return date.getFullYear() + '-' + 
+                   String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(date.getDate()).padStart(2, '0');
+        }
+
+        // 모든 투두 로드
+        async function loadAllTodos() {
+            try {
+                const response = await fetch('/todos');
+                allTodos = await response.json();
+                renderCalendar(); // 투두 표시 업데이트
+            } catch (error) {
+                console.error('투두 로드 실패:', error);
+            }
+        }
+
+        // 특정 날짜의 투두 조회
+        async function fetchTodosByDate(date) {
+            try {
+                const response = await fetch(`/todos/${date}`);
+                const data = await response.json();
+                displayTodos(data.todos);
+            } catch (error) {
+                console.error('투두 조회 실패:', error);
+                displayTodos([]);
+            }
+        }
+
+        // 투두 목록 표시
+        function displayTodos(todos) {
             const todoList = document.getElementById('todo-list');
             todoList.innerHTML = '';
+
+            if (todos.length === 0) {
+                todoList.innerHTML = '<li class="no-todos">이 날짜에는 투두가 없습니다.</li>';
+                return;
+            }
 
             todos.forEach(todo => {
                 const li = document.createElement('li');
@@ -34,32 +177,25 @@
                             <strong>${todo.title}</strong> - ${todo.description}
                         </span>
                         <span class="status ${todo.completed ? 'completed' : ''}">
-                            ${todo.completed ? 'Completed!' : ''}
+                            ${todo.completed ? '완료!' : ''}
                         </span>
                     </div>
                     <div class="button-group">
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
+                        <button class="edit-btn">수정</button>
+                        <button class="delete-btn">삭제</button>
                     </div>
                 `;
 
                 const checkbox = li.querySelector('.todo-checkbox');
                 checkbox.addEventListener('change', async () => {
-                    const response = await fetch(`/todos/${todo.id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            id: todo.id,
-                            title: todo.title,
-                            description: todo.description,
-                            completed: checkbox.checked
-                        })
+                    await updateTodo(todo.id, {
+                        ...todo,
+                        completed: checkbox.checked
                     });
-                    if (response.ok) fetchTodos();
                 });
 
                 const editButton = li.querySelector('.edit-btn');
-                editButton.addEventListener('click', () => editTodo(todo.id));
+                editButton.addEventListener('click', () => editTodo(todo));
 
                 const deleteButton = li.querySelector('.delete-btn');
                 deleteButton.addEventListener('click', () => deleteTodo(todo.id));
@@ -68,39 +204,106 @@
             });
         }
 
-        async function editTodo(id) {
-            const title = prompt('Enter new TO-DO:');
-            const description = prompt('Enter new description:');
-            const completed = confirm('Is this task completed?');
-            const response = await fetch(`/todos/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, title, description, completed })
+        // 투두 업데이트
+        async function updateTodo(id, updatedTodo) {
+            try {
+                const response = await fetch(`/todos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTodo)
+                });
+                if (response.ok) {
+                    await loadAllTodos();
+                    if (selectedDate) {
+                        fetchTodosByDate(formatDate(selectedDate));
+                    }
+                }
+            } catch (error) {
+                console.error('투두 업데이트 실패:', error);
+            }
+        }
+
+        // 투두 수정
+        async function editTodo(todo) {
+            const title = prompt('새로운 투두 제목:', todo.title);
+            if (title === null) return;
+            
+            const description = prompt('새로운 설명:', todo.description);
+            if (description === null) return;
+            
+            const completed = confirm('이 작업이 완료되었나요?');
+            
+            await updateTodo(todo.id, {
+                ...todo,
+                title,
+                description,
+                completed
             });
-            if (response.ok) fetchTodos();
         }
 
+        // 투두 삭제
         async function deleteTodo(id) {
-            const response = await fetch(`/todos/${id}`, { method: 'DELETE' });
-            if (response.ok) fetchTodos();
+            if (!confirm('정말로 이 투두를 삭제하시겠습니까?')) return;
+            
+            try {
+                const response = await fetch(`/todos/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    await loadAllTodos();
+                    if (selectedDate) {
+                        fetchTodosByDate(formatDate(selectedDate));
+                    }
+                }
+            } catch (error) {
+                console.error('투두 삭제 실패:', error);
+            }
         }
 
+        // 투두 추가
         document.getElementById('todo-form').addEventListener('submit', async (event) => {
             event.preventDefault();
+            if (!selectedDate) return;
+
             const title = document.getElementById('title').value;
             const description = document.getElementById('description').value;
-            const response = await fetch('/todos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: Date.now(), title, description, completed: false })
-            });
-            if (response.ok) {
-                document.getElementById('todo-form').reset();
-                fetchTodos();
+            
+            try {
+                const response = await fetch('/todos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id: Date.now(),
+                        title,
+                        description,
+                        completed: false,
+                        date: formatDate(selectedDate)
+                    })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('todo-form').reset();
+                    await loadAllTodos();
+                    fetchTodosByDate(formatDate(selectedDate));
+                }
+            } catch (error) {
+                console.error('투두 추가 실패:', error);
             }
         });
 
-        fetchTodos();
+        // 달력 네비게이션
+        document.getElementById('prev-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            updateCalendarHeader();
+            renderCalendar();
+        });
+
+        document.getElementById('next-month').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            updateCalendarHeader();
+            renderCalendar();
+        });
+
+        // 초기화
+        initCalendar();
     </script>
 </body>
 </html>
