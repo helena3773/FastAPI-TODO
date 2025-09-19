@@ -3,13 +3,20 @@
         "id": 1758167525110,
         "title": "20230764",
         "description": "\uc11c\uc815\uc778",
-        "completed": false,
+        "completed": true,
         "date": "2025-09-18"
     },
     {
         "id": 1758266265347,
         "title": "20230764",
         "description": "\uc11c\uc815\uc778",
+        "completed": true,
+        "date": "2025-09-19"
+    },
+    {
+        "id": 1758296543844,
+        "title": "\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b",
+        "description": "\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b\u314b",
         "completed": false,
         "date": "2025-09-19"
     }

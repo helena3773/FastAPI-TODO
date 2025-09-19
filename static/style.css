@@ -22,7 +22,7 @@ body {
 }
 
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
     body {
         padding: 40px;
     }
@@ -40,35 +40,27 @@ body {
 }
 
 
-@media (max-width: 480px) {
-    .calendar-header h2 {
-        font-size: 1.5em;
-    }
-    
-    .nav-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9em;
-    }
-    
-    .calendar-cell {
-        min-height: 30px;
-        font-size: 0.7em;
-    }
-    
-    .day-header {
-        font-size: 0.7em;
-        padding: 4px 0;
-    }
-    
-    .calendar-dates {
-        gap: 2px;
-    }
-    
-    .calendar-days {
-        gap: 1px;
+@media (max-width: 800px) {        
+    .todo-list {
+        font-size: 0.9rem;
     }
 }
+
+
+@media (max-width: 500px) {        
+    /* 500px 이하에서는 더 이상 반응하지 않도록 고정 폭과 가로 스크롤 */
+    body {
+        overflow-x: auto;
+    }
+    .container {
+        width: 500px;
+    }
+    /* 글자 크기 축소 무력화 */
+    .todo-list {
+        font-size: inherit;
+    }
+}
+
 
 .calendar-section {
     background: #ffffff00;
@@ -119,12 +111,14 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
+    font-size: 1.2rem;
     font-weight: bold;
     gap: 2px;
 }
 
 .calendar-dates {
     display: grid;
+    font-size: 1.5rem;
     grid-template-columns: repeat(7, 1fr);
     gap: 3px;
 }
@@ -200,7 +194,7 @@ body {
 
 #selected-date-title {
     margin-bottom: 20px;
-    font-size: 1.2em;
+    font-size: 1.5rem;
     text-align: center;
     padding: 10px;
     background: rgb(255, 255, 255);
