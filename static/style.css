@@ -8,20 +8,101 @@ body {
 
 .container {
     background: white;
-    /* margin: 0 auto; */
-    padding: 10px;
+    margin: 0 auto;
+    padding: 20px;
     border-radius: 20px;
     box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
-    /* max-width: 1600px; */
+    max-width: 1600px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-@media (max-width: 2000px) {
+/* 태블릿 크기 */
+@media (max-width: 1024px) {
     .container {
         grid-template-columns: 1fr;
-        padding: 20px;
+        gap: 20px;
+        padding: 15px;
+    }
+}
+
+/* 모바일 크기 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 15px;
+        gap: 15px;
+    }
+}
+
+/* 작은 모바일 크기 */
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    
+    .container {
+        padding: 10px;
+        gap: 10px;
+    }
+}
+
+/* 달력 반응형 스타일 */
+@media (max-width: 768px) {
+    .calendar-header h2 {
+        font-size: 1.2em;
+    }
+    
+    .nav-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1em;
+    }
+    
+    .calendar-cell {
+        min-height: 35px;
+        font-size: 0.8em;
+    }
+    
+    .day-header {
+        font-size: 0.8em;
+        padding: 6px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-header h2 {
+        font-size: 1em;
+    }
+    
+    .nav-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9em;
+    }
+    
+    .calendar-cell {
+        min-height: 30px;
+        font-size: 0.7em;
+    }
+    
+    .day-header {
+        font-size: 0.7em;
+        padding: 4px 0;
+    }
+    
+    .calendar-dates {
+        gap: 2px;
+    }
+    
+    .calendar-days {
+        gap: 1px;
     }
 }
 
@@ -40,8 +121,10 @@ h1 {
 .calendar-section {
     background: #ffffff;
     border-radius: 5px;
-    /* max-width: 900px; */
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* 달력 헤더 */
@@ -80,6 +163,7 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    width: 100%;
 }
 
 .calendar-days {
@@ -87,6 +171,7 @@ h1 {
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     font-weight: bold;
+    gap: 2px;
 }
 
 .calendar-dates {
@@ -111,13 +196,14 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 2/1;
-    min-height: 60px;
+    aspect-ratio: 1;
+    min-height: 40px;
     border-radius: 8px;    
     font-weight: 500;
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
+    font-size: 0.9em;
 }
 
 /* hover 효과 */
@@ -168,7 +254,9 @@ h1 {
 
 /* 투두 섹션 */
 .todo-section {
-    padding: 40px;   
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #selected-date-title {
@@ -299,4 +387,130 @@ button {
 
 .todo-form button:hover {
     background: #c5c5c5;   
+}
+
+/* 투두 섹션 반응형 스타일 */
+@media (max-width: 768px) {
+    .todo-section {
+        padding: 15px;
+    }
+    
+    #selected-date-title {
+        font-size: 1em;
+        padding: 8px;
+    }
+    
+    .todo-item {
+        padding: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .todo-form {
+        padding: 15px;
+    }
+    
+    .todo-form input {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    
+    .todo-form button {
+        padding: 8px 16px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .todo-section {
+        padding: 10px;
+    }
+    
+    #selected-date-title {
+        font-size: 0.9em;
+        padding: 6px;
+        margin-bottom: 15px;
+    }
+    
+    .todo-item {
+        padding: 10px;
+        margin-bottom: 6px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .button-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .todo-form {
+        padding: 12px;
+    }
+    
+    .todo-form input {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+    
+    .todo-form button {
+        padding: 6px 12px;
+        font-size: 0.8em;
+    }
+    
+    .status {
+        font-size: 0.8em;
+        padding: 3px 6px;
+    }
+    
+    .todo-text {
+        font-size: 0.9em;
+    }
+}
+
+/* 추가 반응형 최적화 */
+@media (max-width: 320px) {
+    .container {
+        padding: 5px;
+        gap: 5px;
+    }
+    
+    .calendar-cell {
+        min-height: 25px;
+        font-size: 0.6em;
+    }
+    
+    .day-header {
+        font-size: 0.6em;
+        padding: 2px 0;
+    }
+    
+    .todo-section {
+        padding: 5px;
+    }
+    
+    .todo-item {
+        padding: 8px;
+    }
+    
+    .todo-form {
+        padding: 8px;
+    }
+}
+
+/* 가로 모드 최적화 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .calendar-cell {
+        min-height: 25px;
+        font-size: 0.7em;
+    }
+    
+    .todo-section {
+        padding: 10px;
+    }
 }
