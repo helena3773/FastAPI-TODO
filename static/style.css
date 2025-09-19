@@ -12,7 +12,7 @@ body {
     padding: 10px;
     border-radius: 20px;
     box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
-    max-width: 1600px;
+    /* max-width: 1600px; */
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 30px;
@@ -111,10 +111,9 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 2/1; /* 정사각형 유지 */
-    min-height: 50px;
-    border-radius: 8px;
-    border: 1px solid #ecf0f1;
+    aspect-ratio: 2/1;
+    min-height: 60px;
+    border-radius: 8px;    
     font-weight: 500;
     position: relative;
     cursor: pointer;
@@ -169,19 +168,18 @@ h1 {
 
 /* 투두 섹션 */
 .todo-section {
-    background: #ffffff00;
-    border-radius: 15px;
-    padding: 20px;   
+    padding: 40px;   
 }
 
 #selected-date-title {
     margin-bottom: 20px;
-    font-size: 1.3em;
+    font-size: 1.2em;
     text-align: center;
     padding: 10px;
-    background: rgb(220, 220, 220);
-    color: rgb(0, 0, 0);
-    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    border: 3px solid #eeeeee;
+    color: rgb(67, 67, 67);
+    border-radius: 30px;
 }
 
 .todo-list {
@@ -200,9 +198,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease;
-    
-    
+    transition: all 0.3s ease;    
 }
 
 .todo-item:hover {
@@ -216,10 +212,10 @@ h1 {
 
 .no-todos {
     text-align: center;
-    color: #818181;
-    font-style: italic;
+    color: #8181814f;
     padding: 20px;
     background: white;
+    font-size: 1.5em;
 }
 
 .status {
@@ -251,32 +247,30 @@ button {
 }
 
 .edit-btn {
-    background: #e5e5e5;
+    background: #e5e5e530;
     color: rgb(49, 49, 49);
 }
 
 .edit-btn:hover {
     background: #e5e5e5;
-    border: 2px solid #eeeeee;
-    color: white;
+    color: rgb(49, 49, 49);
 }
 
 .delete-btn {
-    background: #e5e5e5;
+    background: #e5e5e530;
     color: rgb(49, 49, 49);
 }
 
 .delete-btn:hover {
     background: #e5e5e5;
-    color: white;
+    color: rgb(49, 49, 49);
 }
 
 .todo-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    background: rgb(249, 249, 249);
-    /* border: 2px solid #eeeeee; */
+    background: rgba(249, 249, 249, 0.705);
     padding: 20px;
     border-radius: 12px;
 }
@@ -298,10 +292,9 @@ button {
 .todo-form button {
     background: #e2e2e2;
     color: rgb(0, 0, 0);
-    /* font-weight: bold; */
-    margin-left: 100px;
-    padding: 12px 24px;
+    padding: 10px 20px;
     font-size: 1em;
+    border-radius: 10px;
 }
 
 .todo-form button:hover {

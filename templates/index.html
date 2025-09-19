@@ -140,7 +140,7 @@
                 allTodos = await response.json();
                 renderCalendar(); // 투두 표시 업데이트
             } catch (error) {
-                console.error('투두 로드 실패:', error);
+                console.error('TO-DO loading failed:', error);
             }
         }
 
@@ -151,7 +151,7 @@
                 const data = await response.json();
                 displayTodos(data.todos);
             } catch (error) {
-                console.error('투두 조회 실패:', error);
+                console.error('Fetching TO-DO failed:', error);
                 displayTodos([]);
             }
         }
@@ -162,7 +162,7 @@
             todoList.innerHTML = '';
 
             if (todos.length === 0) {
-                todoList.innerHTML = '<li class="no-todos">이 날짜에는 투두가 없습니다.</li>';
+                todoList.innerHTML = '<li class="no-todos">No TO-DO</li>';
                 return;
             }
 
@@ -177,7 +177,7 @@
                             <strong>${todo.title}</strong> - ${todo.description}
                         </span>
                         <span class="status ${todo.completed ? 'completed' : ''}">
-                            ${todo.completed ? '완료!' : ''}
+                            ${todo.completed ? 'Done!' : ''}
                         </span>
                     </div>
                     <div class="button-group">
@@ -254,7 +254,7 @@
                     }
                 }
             } catch (error) {
-                console.error('투두 삭제 실패:', error);
+                console.error('Deleting TO-DO failed:', error);
             }
         }
 
@@ -285,7 +285,7 @@
                     fetchTodosByDate(formatDate(selectedDate));
                 }
             } catch (error) {
-                console.error('투두 추가 실패:', error);
+                console.error('Adding TO-DO failed:', error);
             }
         });
 
