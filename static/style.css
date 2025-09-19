@@ -21,39 +21,24 @@ body {
     position: relative;
 }
 
-/* 태블릿 크기 */
+
 @media (max-width: 1024px) {
     .container {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
         gap: 20px;
         padding: 15px;
     }
 }
 
-/* 모바일 크기 */
-@media (max-width: 1024px) {
-    body {
-        padding: 10px;
-    }
-    
-    .container {
-        padding: 15px;
-        gap: 15px;
-        padding-bottom: 110px; /* 하단 버튼과 겹침 방지 여유 공간 */
-    }
 
-    .todo-form {
-        margin-bottom: 80px; /* 버튼과 폼 간격 확보 */
-    }
-}
 
-/* 작은 모바일 크기 */
-@media (max-width: 480px) {
+@media (max-width: 900px) {
     body {
         padding: 5px;
     }
     
     .container {
+        grid-template-columns: 1fr; /* 이 시점에서만 세로 1열로 전환 */
         padding: 10px;
         gap: 10px;
         padding-bottom: 100px; /* 하단 버튼과 겹침 방지 여유 공간 */
@@ -513,18 +498,12 @@ button {
     }
 }
 
-/* 가로 모드 최적화 */
+/* 가로 모드 최적화: 레이아웃은 바꾸지 않음 (중복 전환 방지) */
 @media (max-height: 500px) and (orientation: landscape) {
-    .container {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-    
     .calendar-cell {
         min-height: 25px;
         font-size: 0.7em;
     }
-    
     .todo-section {
         padding: 10px;
     }
