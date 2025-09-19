@@ -48,14 +48,13 @@ body {
 
 
 @media (max-width: 500px) {        
-    /* 500px 이하에서는 더 이상 반응하지 않도록 고정 폭과 가로 스크롤 */
     body {
         overflow-x: auto;
     }
     .container {
         width: 500px;
     }
-    /* 글자 크기 축소 무력화 */
+    
     .todo-list {
         font-size: inherit;
     }
@@ -255,6 +254,25 @@ body {
 .button-group {
     display: flex;
     gap: 8px;
+    flex: 0 0 auto;           
+    min-width: 140px;          
+    justify-content: flex-end;
+    white-space: nowrap;       
+}
+
+.todo-item > div:first-child {
+    flex: 1 1 auto;
+    min-width: 0;              
+}
+
+
+.todo-text {
+    white-space: normal;
+    word-break: break-word;
+}
+
+.status {
+    flex-shrink: 0;
 }
 
 button {
