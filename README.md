@@ -4,6 +4,7 @@
 ## Features
 - 달력에 원하는 TO-DO 추가
 - TO-DO 수정/삭제
+- stabilized UI
 
 ## Installation
 
