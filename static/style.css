@@ -8,7 +8,7 @@ body {
 
 .container {
     background: white;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     padding: 10px;
     border-radius: 20px;
     box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
@@ -18,7 +18,7 @@ body {
     gap: 30px;
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 2000px) {
     .container {
         grid-template-columns: 1fr;
         padding: 20px;
@@ -40,7 +40,7 @@ h1 {
 .calendar-section {
     background: #ffffff;
     border-radius: 5px;
-    max-width: 900px;
+    /* max-width: 900px; */
     margin: 0 auto;
 }
 
