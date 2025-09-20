@@ -222,7 +222,7 @@ body {
 }
 
 .todo-item:hover {
-    background: rgb(243, 243, 243);    
+    background: rgb(255, 248, 248);    
 }
 
 .todo-item.completed {
