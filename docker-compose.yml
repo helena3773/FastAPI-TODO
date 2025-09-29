@@ -5,6 +5,6 @@ services:
     build:
       context: ./fastapi-app      # Dockerfile이 위치한 디렉토리 경로
       dockerfile: Dockerfile      # Dockerfile 이름 (생략 가능, 기본값은 'Dockerfile')
-    container_name: FastApi-app
+    container_name: fastapi-app
     ports:
       - "5001:5001"
