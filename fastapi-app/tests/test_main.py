@@ -1,6 +1,3 @@
-# Pytest
-# 본인의 코드에 실행되게 test_main.py 작성
-
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

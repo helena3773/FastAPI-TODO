@@ -9,6 +9,9 @@ from typing import Optional
 
 app = FastAPI()
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
 class TodoItem(BaseModel):
     id: int
     title: str
@@ -22,7 +25,8 @@ class DateTodos(BaseModel):
 
 TODO_FILE = "todo.json"
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+if os.path.isdir(STATIC_DIR):
+    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 def load_todos():
     if os.path.exists(TODO_FILE):
