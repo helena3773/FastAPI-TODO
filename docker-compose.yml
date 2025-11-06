@@ -8,6 +8,7 @@ services:
     container_name: fastapi-app
     ports:
       - "5001:5001"
+    restart: always
 
   sonarqube:
     image: sonarqube:latest
