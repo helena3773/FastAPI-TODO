@@ -23,7 +23,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
       - sonarqube_extensions:/opt/sonarqube/extensions
 
-  prometeus:
+  prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
