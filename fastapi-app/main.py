@@ -6,7 +6,7 @@ import json
 import os
 from datetime import datetime, date
 from typing import Optional
-from prometheus_fastapi__instrumentator import Instrumentator
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI()
 
