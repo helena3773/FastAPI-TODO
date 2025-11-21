@@ -48,6 +48,20 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin  # 기본 Grafana 로그인 비밀번호
     volumes:
       - grafana-data:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - loadtest-net
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=jmeter
+    volumes:
+      - influxdb-data:/var/lib/influxdb
     networks:
       - loadtest-net
 
@@ -90,12 +104,16 @@ services:
       - -JBASE_PROTOCOL=http
       - -JBASE_HOST=fastapi-app
       - -JBASE_PORT=5001
+      - -JinfluxdbUrl=http://influxdb:8086/write?db=jmeter
       - -Jjmeter.save.saveservice.output_format=csv
       - -e
       - -o
       - /jmeter/report
     networks:
       - loadtest-net
+    depends_on:
+      - influxdb
+      - fastapi-app
 
 networks:
   loadtest-net:
@@ -107,3 +125,4 @@ volumes:
   sonarqube_logs:
   sonarqube_extensions:
   grafana-data:
+  influxdb-data:
