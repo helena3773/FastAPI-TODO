@@ -6,6 +6,7 @@ import json
 import os
 import logging
 import time
+import sys
 from multiprocessing import Queue
 from os import getenv
 from fastapi import Request
@@ -19,19 +20,35 @@ app = FastAPI()
 # Prometheus 메트릭스 엔드포인트 (/metrics)
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
-loki_logs_handler = LokiQueueHandler(
-    Queue(-1),
-    url=getenv("LOKI_ENDPOINT"),
-    tags={"application": "fastapi"},
-    version="1",
-)
+# Loki 설정
+loki_endpoint = getenv("LOKI_ENDPOINT", "http://loki:3100/loki/api/v1/push")
 
-# Custom access logger (ignore Uvicorn's default logging)
+# 기본 로거 설정 (콘솔 출력용)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.INFO)
+console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(console_formatter)
+
+# Custom access logger
 custom_logger = logging.getLogger("custom.access")
 custom_logger.setLevel(logging.INFO)
+custom_logger.addHandler(console_handler)  # 콘솔에도 출력
 
-# Add Loki handler (assuming `loki_logs_handler` is correctly configured)
-custom_logger.addHandler(loki_logs_handler)
+# Loki handler 설정 (환경 변수가 있을 때만)
+if loki_endpoint:
+    try:
+        loki_logs_handler = LokiQueueHandler(
+            Queue(-1),
+            url=loki_endpoint,
+            tags={"application": "fastapi"},
+            version="1",
+        )
+        custom_logger.addHandler(loki_logs_handler)
+        custom_logger.info(f"Loki handler initialized with endpoint: {loki_endpoint}")
+    except Exception as e:
+        custom_logger.error(f"Failed to initialize Loki handler: {e}", exc_info=True)
+else:
+    custom_logger.warning("LOKI_ENDPOINT not set, Loki logging disabled")
 
 async def log_requests(request: Request, call_next):
     start_time = time.time()
@@ -124,3 +141,14 @@ def read_root():
     with open("templates/index.html", "r", encoding="utf-8") as file:
         content = file.read()
     return HTMLResponse(content=content)
+
+@app.get("/test-log")
+def test_log():
+    """Loki 로깅 테스트용 엔드포인트"""
+    test_message = f"Test log message at {datetime.now().isoformat()}"
+    custom_logger.info(test_message)
+    return {
+        "message": "Test log sent to Loki",
+        "log_message": test_message,
+        "loki_endpoint": loki_endpoint
+    }

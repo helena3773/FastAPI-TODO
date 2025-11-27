@@ -171,6 +171,7 @@ services:
       - grafana-data:/var/lib/grafana
     depends_on:
       - influxdb
+      - loki
     networks:
       - loadtest-net
 
@@ -207,6 +208,10 @@ services:
     container_name: loki
     ports:
       - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
     networks:
       - loadtest-net
 
@@ -217,3 +222,4 @@ networks:
 volumes:
   grafana-data:
   influxdb-data:
+  loki-data:
