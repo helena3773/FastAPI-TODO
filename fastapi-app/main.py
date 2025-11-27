@@ -48,6 +48,9 @@ async def log_requests(request: Request, call_next):
 
     return response
 
+# 미들웨어 등록
+app.middleware("http")(log_requests)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
