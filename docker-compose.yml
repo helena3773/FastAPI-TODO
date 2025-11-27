@@ -215,6 +215,17 @@ services:
     networks:
       - loadtest-net
 
+  load-generator:
+    build:
+      context: ./load-generator
+      dockerfile: Dockerfile
+    container_name: load-generator
+    depends_on:
+      - fastapi-app
+    networks:
+      - loadtest-net
+    restart: unless-stopped
+
 networks:
   loadtest-net:
     driver: bridge
