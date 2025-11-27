@@ -140,6 +140,10 @@ services:
     container_name: fastapi-app
     ports:
       - "5001:5001"
+    depends_on:
+      - loki
+    environment:
+      - LOKI_ENDPOINT=http://loki:3100/loki/api/v1/push
     restart: always
     networks:
       - loadtest-net
@@ -197,6 +201,12 @@ services:
     depends_on:
       - influxdb
       - fastapi-app
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    ports:
+      - "3100:3100"
 
 networks:
   loadtest-net:
